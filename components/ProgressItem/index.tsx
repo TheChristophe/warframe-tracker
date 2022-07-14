@@ -1,6 +1,5 @@
 import React, { useContext, useMemo } from 'react';
 import { Completion, StateContext } from 'components/StateContext';
-import Image from 'next/image';
 import { imagePath } from 'utility/images';
 import ComponentPreview from './ComponentPreview';
 import { SimplifiedItem } from 'utility/types';
@@ -58,13 +57,12 @@ const ProgressItem: React.FC<ProgressItemProps> = ({ item }) => {
         <div className={'p-2 w-32 shrink-0 ' + background}>
           {item.imageName && (
             <div className="relative w-full">
-              <Image
+              <img
                 src={imagePath(item.imageName)}
                 alt={item.name}
                 referrerPolicy="no-referrer"
-                width={200}
-                height={200}
-                layout="raw"
+                width="200px"
+                height="200px"
                 style={{
                   objectFit: 'contain',
                   width: '100%',

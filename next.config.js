@@ -13,16 +13,6 @@ const nextConfig = {
 
     return config;
   },
-  images: {
-    domains: ['cdn.warframestat.us'],
-    // high TTL: do not expect warframe images to change
-    minimumCacheTTL: 604800,
-  },
-  experimental: {
-    images: {
-      layoutRaw: true,
-    },
-  },
 };
 
 module.exports = nextConfig;

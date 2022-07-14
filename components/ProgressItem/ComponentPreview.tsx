@@ -1,5 +1,4 @@
 import React, { useContext, useMemo } from 'react';
-import Image from 'next/image';
 import { imagePath } from 'utility/images';
 import { StateContext } from 'components/StateContext';
 import { SimplifiedComponent, SimplifiedItemWithComponents } from 'utility/types';
@@ -46,17 +45,17 @@ const ComponentPreview: React.FC<ComponentPreviewProps> = ({ item, component, wi
         }}
       >
         {component.imageName ? (
-          <Image
+          <img
             src={imagePath(component.imageName)}
             alt={component.name}
             referrerPolicy="no-referrer"
-            layout="raw"
-            width="100"
-            height="100"
+            width="100px"
+            height="100px"
             style={{
               objectFit: 'contain',
             }}
             className="w-12 h-12 mx-auto"
+            loading="lazy"
           />
         ) : (
           component.name
