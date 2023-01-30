@@ -1,20 +1,19 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import { Item } from 'warframe-items';
-import React, { ReactNode, useCallback, useContext, useMemo, useState } from 'react';
+import { FC, PropsWithChildren, useCallback, useContext, useMemo, useState } from 'react';
 import { SaveVersion, StateContext, StateContextProvider } from 'components/StateContext';
 import ProgressItems from 'components/ProgressItems';
 import { saveAs } from 'file-saver';
 import { fetchItems } from 'api/data';
 import { ALL_ALLOWED_CATEGORIES, AllowedCategories, SimplifiedItem } from 'utility/types';
-import _ from 'lodash';
+import { debounce } from 'lodash';
 
 type ButtonProps = {
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
-  children: ReactNode;
   className?: string;
 };
-const Button: React.FC<ButtonProps> = ({ children, onClick, className }) => {
+const Button: FC<PropsWithChildren<ButtonProps>> = ({ children, onClick, className }) => {
   return (
     <button
       onClick={onClick}
@@ -45,13 +44,13 @@ const Home: NextPage<HomeProps> = ({ items }) => {
   }, [filter, items]);
 
   const updateFilter = useCallback(
-    _.debounce((filter: string) => {
+    debounce((filter: string) => {
       setFilter(filter);
     }, 100),
     [setFilter]
   );
   const clearFilter = useCallback(
-    _.debounce(() => {
+    debounce(() => {
       setFilter('');
       (document.getElementById('filter') as HTMLInputElement).value = '';
     }, 100),

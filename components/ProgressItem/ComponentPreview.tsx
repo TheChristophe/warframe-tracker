@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react';
+import { FC, useContext, useMemo } from 'react';
 import { imagePath } from 'utility/images';
 import { StateContext } from 'components/StateContext';
 import { SimplifiedComponent, SimplifiedItemWithComponents } from 'utility/types';
@@ -8,7 +8,7 @@ type ComponentPreviewProps = {
   component: SimplifiedComponent;
   width: string;
 };
-const ComponentPreview: React.FC<ComponentPreviewProps> = ({ item, component, width }) => {
+const ComponentPreview: FC<ComponentPreviewProps> = ({ item, component, width }) => {
   const { state, dispatch } = useContext(StateContext);
   const value = state[item.uniqueName].components[component.uniqueName].count;
 

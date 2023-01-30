@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react';
+import { useContext, useMemo } from 'react';
 import { Completion, StateContext } from 'components/StateContext';
 import { imagePath } from 'utility/images';
 import ComponentPreview from './ComponentPreview';

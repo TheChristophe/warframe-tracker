@@ -6,7 +6,7 @@ import {
   SimplifiedItem,
 } from 'utility/types';
 import cacheData from 'memory-cache';
-import _ from 'lodash';
+import { pick } from 'lodash';
 
 const mergeDuplicateComponents = (items: SimplifiedItem[]): SimplifiedItem[] => {
   return items.map((item) => {
@@ -40,7 +40,7 @@ const filterUnusedData = (items: Item[]): SimplifiedItem[] => {
         (item.excludeFromCodex ?? false) === false
     )
     .map((item) => {
-      const baseSimplified = _.pick(item, [
+      const baseSimplified = pick(item, [
         'uniqueName',
         'name',
         'category',
@@ -53,7 +53,7 @@ const filterUnusedData = (items: Item[]): SimplifiedItem[] => {
       return {
         ...baseSimplified,
         components: item.components.map((component) =>
-          _.pick(component, ['uniqueName', 'itemCount', 'name', 'imageName'])
+          pick(component, ['uniqueName', 'itemCount', 'name', 'imageName'])
         ),
       };
     });

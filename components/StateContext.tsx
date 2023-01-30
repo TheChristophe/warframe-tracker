@@ -1,6 +1,6 @@
 import React, { createContext, ReactNode, useEffect, useReducer } from 'react';
 import { Item } from 'warframe-items';
-import _ from 'lodash';
+import { debounce } from 'lodash';
 import { SimplifiedComponent, SimplifiedItem } from 'utility/types';
 import { determineCompletion } from 'utility/determineCompletion';
 
@@ -67,7 +67,7 @@ const save = (state: State) => {
   localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(state));
 };
 
-const autosave = _.debounce((state: State) => {
+const autosave = debounce((state: State) => {
   if (state !== undefined) {
     save(state);
   }
