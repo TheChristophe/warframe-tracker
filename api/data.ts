@@ -31,7 +31,14 @@ const mergeDuplicateComponents = (items: SimplifiedItem[]): SimplifiedItem[] => 
 
 const filterUnusedData = (items: Item[]): SimplifiedItem[] => {
   return items
-    .filter((item) => ALL_ALLOWED_CATEGORIES.includes(item.category as AllowedCategories))
+    .filter(
+      (item) =>
+        ALL_ALLOWED_CATEGORIES.includes(item.category as AllowedCategories) &&
+        // filter out moa / hound parts
+        (item.category === 'Pets' ? item.type !== 'Pet Resource' : true) &&
+        // filter out weird pet duplicates
+        (item.excludeFromCodex ?? false) === false
+    )
     .map((item) => {
       const baseSimplified = _.pick(item, [
         'uniqueName',
