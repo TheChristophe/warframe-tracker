@@ -7,7 +7,8 @@ import ProgressItems from 'components/ProgressItems';
 import { saveAs } from 'file-saver';
 import { fetchItems } from 'api/data';
 import { ALL_ALLOWED_CATEGORIES, AllowedCategories, SimplifiedItem } from 'utility/types';
-import { debounce } from 'lodash';
+import { debounce, isEqual } from 'lodash';
+import clsx from 'clsx';
 
 type ButtonProps = {
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
@@ -90,7 +91,7 @@ const Home: NextPage<HomeProps> = ({ items }) => {
               setActive(ALL_CATEGORIES);
               clearFilter();
             }}
-            className="mb-1"
+            className={clsx('mb-1', isEqual(active, ALL_CATEGORIES) && 'underline')}
           >
             All
           </Button>
@@ -99,7 +100,7 @@ const Home: NextPage<HomeProps> = ({ items }) => {
               setActive(['Primary']);
               clearFilter();
             }}
-            className="mb-1"
+            className={clsx('mb-1', isEqual(active, ['Primary']) && 'underline')}
           >
             Primary
           </Button>
@@ -108,7 +109,7 @@ const Home: NextPage<HomeProps> = ({ items }) => {
               setActive(['Secondary']);
               clearFilter();
             }}
-            className="mb-1"
+            className={clsx('mb-1', isEqual(active, ['Secondary']) && 'underline')}
           >
             Secondary
           </Button>
@@ -117,7 +118,7 @@ const Home: NextPage<HomeProps> = ({ items }) => {
               setActive(['Melee']);
               clearFilter();
             }}
-            className="mb-1"
+            className={clsx('mb-1', isEqual(active, ['Melee']) && 'underline')}
           >
             Melee
           </Button>
@@ -126,7 +127,7 @@ const Home: NextPage<HomeProps> = ({ items }) => {
               setActive(['Warframes']);
               clearFilter();
             }}
-            className="mb-1"
+            className={clsx('mb-1', isEqual(active, ['Warframes']) && 'underline')}
           >
             Warframes
           </Button>
@@ -135,7 +136,10 @@ const Home: NextPage<HomeProps> = ({ items }) => {
               setActive(['Arch-Gun', 'Arch-Melee', 'Archwing']);
               clearFilter();
             }}
-            className="mb-1"
+            className={clsx(
+              'mb-1',
+              isEqual(active, ['Arch-Gun', 'Arch-Melee', 'Archwing']) && 'underline'
+            )}
           >
             Archwing
           </Button>
@@ -144,7 +148,7 @@ const Home: NextPage<HomeProps> = ({ items }) => {
               setActive(['Pets', 'Sentinels']);
               clearFilter();
             }}
-            className="mb-1"
+            className={clsx('mb-1', isEqual(active, ['Pets', 'Sentinels']) && 'underline')}
           >
             Companions
           </Button>
