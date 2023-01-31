@@ -1,7 +1,7 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import { Item } from 'warframe-items';
-import { FC, PropsWithChildren, useCallback, useContext, useMemo, useState } from 'react';
+import { FC, MouseEventHandler, PropsWithChildren, useContext, useMemo, useState } from 'react';
 import { SaveVersion, StateContext, StateContextProvider } from 'components/StateContext';
 import ProgressItems from 'components/ProgressItems';
 import { saveAs } from 'file-saver';
@@ -11,7 +11,7 @@ import { debounce, isEqual } from 'lodash';
 import clsx from 'clsx';
 
 type ButtonProps = {
-  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  onClick?: MouseEventHandler<HTMLButtonElement>;
   className?: string;
 };
 const Button: FC<PropsWithChildren<ButtonProps>> = ({ children, onClick, className }) => {
