@@ -24,12 +24,24 @@ const Button: FC<PropsWithChildren<ButtonProps>> = ({ children, onClick, classNa
   );
 };
 
+const ALL_CATEGORIES: AllowedCategories[] = [
+  'Primary',
+  'Secondary',
+  'Melee',
+  'Warframes',
+  'Arch-Gun',
+  'Arch-Melee',
+  'Archwing',
+  'Pets',
+  'Sentinels',
+];
+
 type HomeProps = {
   items: SimplifiedItem[];
 };
 const Home: NextPage<HomeProps> = ({ items }) => {
   const { state, dispatch } = useContext(StateContext);
-  const [active, setActive] = useState<AllowedCategories[]>(['Primary']);
+  const [active, setActive] = useState<AllowedCategories[]>(ALL_CATEGORIES);
   const [hideCompleted, setHideCompleted] = useState(true);
 
   const [filter, setFilter] = useState<string>('');
@@ -73,6 +85,15 @@ const Home: NextPage<HomeProps> = ({ items }) => {
       </Head>
       <div className="flex flex-row">
         <div className="pt-2 px-2">
+          <Button
+            onClick={() => {
+              setActive(ALL_CATEGORIES);
+              clearFilter();
+            }}
+            className="mb-1"
+          >
+            All
+          </Button>
           <Button
             onClick={() => {
               setActive(['Primary']);
