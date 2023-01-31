@@ -16,7 +16,7 @@ const nextConfig = {
   images: {
     domains: ['cdn.warframestat.us'],
     formats: ['image/avif', 'image/webp'],
-    unoptimized: true,
+    minimumCacheTTL: 604800
   },
 };
 
