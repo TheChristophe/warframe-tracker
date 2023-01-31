@@ -51,8 +51,7 @@ const Home: NextPage<HomeProps> = ({ items }) => {
       return items;
     }
     return items.filter(
-      (item) =>
-        item.name.toLowerCase().includes(filter) || item.uniqueName.toLowerCase().includes(filter)
+      (item) => item.name.toLowerCase().includes(filter) // || item.uniqueName.toLowerCase().includes(filter)
     );
   }, [filter, items]);
 
