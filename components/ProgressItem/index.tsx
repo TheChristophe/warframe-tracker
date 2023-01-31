@@ -45,16 +45,16 @@ const ProgressItem: FC<ProgressItemProps> = ({ item }) => {
   if (completed === Completion.READY_TO_CRAFT) {
     background = 'bg-cyan-200';
   } else if (completed === Completion.MISSING_EVERYTHING) {
-    background = 'bg-red-200';
+    background = 'bg-red-300';
   } else if (completed === Completion.MISSING_SOMETHING) {
     background = 'bg-amber-200';
   } else if (completed === Completion.DONE) {
-    background = 'bg-lime-200';
+    background = 'bg-lime-300';
   }
 
   return (
-    <div className="border shadow border-neutral-600 bg-gradient-to-b from-slate-100 to-slate-400 flex divide-x divide-black bg-zinc-400 h-40 m-2">
-      <div className={'p-2 w-32 shrink-0 ' + background}>
+    <div className="border shadow border-black border-neutral-600 bg-slate-200 flex divide-x divide-black h-40 m-2  overflow-hidden ">
+      <div className={'p-2 w-32 shrink-0 overflow-hidden shadow-inner-thicc ' + background}>
         {item.imageName && (
           <div className="relative w-full">
             <Image
