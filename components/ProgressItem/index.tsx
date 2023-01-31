@@ -53,7 +53,7 @@ const ProgressItem: FC<ProgressItemProps> = ({ item }) => {
   }
 
   return (
-    <div className="border shadow border-neutral-600 bg-gradient-to-b from-slate-100 to-slate-400 flex divide-x divide-black bg-zinc-400 h-40">
+    <div className="border shadow border-neutral-600 bg-gradient-to-b from-slate-100 to-slate-400 flex divide-x divide-black bg-zinc-400 h-40 m-2">
       <div className={'p-2 w-32 shrink-0 ' + background}>
         {item.imageName && (
           <div className="relative w-full">
