@@ -185,13 +185,11 @@ const Home: NextPage<HomeProps> = ({ items }) => {
           <Button onClick={exportSave}>Export</Button>
         </div>
       </div>
-      <div>
-        <ProgressItems
-          items={filtered}
-          categories={filter.length ? ALL_ALLOWED_CATEGORIES : active}
-          hideCompleted={hideCompleted}
-        />
-      </div>
+      <ProgressItems
+        items={filtered}
+        categories={filter.length ? ALL_ALLOWED_CATEGORIES : active}
+        hideCompleted={hideCompleted}
+      />
     </>
   );
 };

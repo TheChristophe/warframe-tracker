@@ -1,56 +1,46 @@
-import { FC, useContext, useMemo } from 'react';
+import { ChangeEventHandler, FC, memo, useContext } from 'react';
 import { imagePath } from 'utility/images';
 import { StateContext } from 'components/StateContext';
 import { SimplifiedComponent, SimplifiedItemWithComponents } from 'utility/types';
+import Image from 'next/image';
 
-type ComponentPreviewProps = {
-  item: SimplifiedItemWithComponents;
+type ComponentPreviewLayoutProps = {
   component: SimplifiedComponent;
   width: string;
+  onToggle: () => void;
+  onChange: ChangeEventHandler<HTMLInputElement>;
+  count: number;
 };
-const ComponentPreview: FC<ComponentPreviewProps> = ({ item, component, width }) => {
-  const { state, dispatch } = useContext(StateContext);
-  const value = state[item.uniqueName].components[component.uniqueName].count;
-
-  const singleItem = useMemo(() => {
-    return component.itemCount === 1;
-  }, [component.itemCount]);
-
-  const setValue = (value: number) => {
-    const clampedValue = Math.min(component.itemCount, Math.max(0, value));
-    dispatch({
-      type: 'setComponentCount',
-      item: item,
-      component: component,
-      count: clampedValue,
-    });
-  };
-
+const _ComponentPreviewLayout: FC<ComponentPreviewLayoutProps> = ({
+  component,
+  width,
+  onToggle,
+  count,
+  onChange,
+}) => {
   return (
     <div className="grow flex flex-col" style={{ maxWidth: width }}>
       <div
         className={
           'grow-0 p-1 ' +
-          (value == component.itemCount
+          (count == component.itemCount
             ? 'bg-lime-200'
-            : value == 0
+            : count == 0
             ? 'bg-red-200'
             : 'bg-amber-200')
         }
         title={component.name}
         role="button"
         style={{ cursor: 'pointer' }}
-        onClick={() => {
-          setValue(value !== component.itemCount ? component.itemCount : 0);
-        }}
+        onClick={onToggle}
       >
         {component.imageName ? (
-          <img
+          <Image
             src={imagePath(component.imageName)}
             alt={component.name}
             referrerPolicy="no-referrer"
-            width="100px"
-            height="100px"
+            width={48}
+            height={48}
             style={{
               objectFit: 'contain',
             }}
@@ -63,25 +53,54 @@ const ComponentPreview: FC<ComponentPreviewProps> = ({ item, component, width })
       </div>
       <div className="grow-0 w-full">
         <small className="px-1 text-center w-full inline-block">{component.itemCount}</small>
-        <div className={'p-1 ' + (singleItem ? 'hidden' : '')}>
+        <div className={'p-1 ' + (component.itemCount === 1 ? 'hidden' : '')}>
           <input
             type="number"
             className={
               'w-full p-1 text-sm ' +
-              (value == component.itemCount
+              (count == component.itemCount
                 ? 'bg-lime-200'
-                : value == 0
+                : count == 0
                 ? 'bg-red-200'
                 : 'bg-amber-200')
             }
-            value={value}
-            onChange={(e) => {
-              setValue(e.target.valueAsNumber);
-            }}
+            value={count}
+            onChange={onChange}
           />
         </div>
       </div>
     </div>
+  );
+};
+const ComponentPreviewLayout = memo(_ComponentPreviewLayout);
+
+type ComponentPreviewProps = {
+  item: SimplifiedItemWithComponents;
+  component: SimplifiedComponent;
+  width: string;
+};
+const ComponentPreview: FC<ComponentPreviewProps> = ({ item, component, width }) => {
+  const { state, dispatch } = useContext(StateContext);
+  const value = state[item.uniqueName].components[component.uniqueName].count;
+
+  const setValue = (value: number) => {
+    const clampedValue = Math.min(component.itemCount, Math.max(0, value));
+    dispatch({
+      type: 'setComponentCount',
+      item: item,
+      component: component,
+      count: clampedValue,
+    });
+  };
+
+  return (
+    <ComponentPreviewLayout
+      component={component}
+      count={value}
+      onToggle={() => setValue(value !== component.itemCount ? component.itemCount : 0)}
+      onChange={(e) => setValue(e.target.valueAsNumber)}
+      width={width}
+    />
   );
 };
 

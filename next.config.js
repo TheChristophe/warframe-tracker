@@ -13,6 +13,11 @@ const nextConfig = {
 
     return config;
   },
+  images: {
+    domains: ['cdn.warframestat.us'],
+    formats: ['image/avif', 'image/webp'],
+    unoptimized: true,
+  },
 };
 
 module.exports = nextConfig;
