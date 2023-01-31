@@ -102,7 +102,7 @@ const ProgressItem: FC<ProgressItemProps> = ({ item }) => {
             )}
           </p>
           {craftable && 'components' in item && (
-            <div className="grow flex flex-row">
+            <ul className="grow flex flex-row">
               {item.components.map((component, i) => (
                 <ComponentPreview
                   key={component.uniqueName + i}
@@ -111,7 +111,7 @@ const ProgressItem: FC<ProgressItemProps> = ({ item }) => {
                   width={100 / (item.components.length ?? 1) + '%'}
                 />
               ))}
-            </div>
+            </ul>
           )}
           {!craftable && <small>No known recipes to craft this weapon.</small>}
         </div>

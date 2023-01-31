@@ -19,7 +19,7 @@ const _ComponentPreviewLayout: FC<ComponentPreviewLayoutProps> = ({
   onChange,
 }) => {
   return (
-    <div className="grow flex flex-col" style={{ maxWidth: width }}>
+    <li className="grow flex flex-col" style={{ maxWidth: width }}>
       <div
         className={
           'grow-0 p-1 ' +
@@ -69,7 +69,7 @@ const _ComponentPreviewLayout: FC<ComponentPreviewLayoutProps> = ({
           />
         </div>
       </div>
-    </div>
+    </li>
   );
 };
 const ComponentPreviewLayout = memo(_ComponentPreviewLayout);
