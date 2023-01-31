@@ -56,17 +56,19 @@ const Home: NextPage<HomeProps> = ({ items }) => {
     );
   }, [filter, items]);
 
-  const updateFilter = useCallback(
-    debounce((filter: string) => {
-      setFilter(filter);
-    }, 100),
+  const updateFilter = useMemo(
+    () =>
+      debounce((filter: string) => {
+        setFilter(filter);
+      }, 100),
     [setFilter]
   );
-  const clearFilter = useCallback(
-    debounce(() => {
-      setFilter('');
-      (document.getElementById('filter') as HTMLInputElement).value = '';
-    }, 100),
+  const clearFilter = useMemo(
+    () =>
+      debounce(() => {
+        setFilter('');
+        (document.getElementById('filter') as HTMLInputElement).value = '';
+      }, 100),
     [setFilter]
   );
 
