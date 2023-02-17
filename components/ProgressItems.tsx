@@ -15,7 +15,7 @@ const ProgressItems: FC<ProgressItemsProps> = ({ items, categories, hideComplete
   const allowedItems = useMemo(() => {
     return items.filter(
       (item) =>
-        categories.includes(item.category as AllowedCategories) &&
+        (categories.length === 0 || categories.includes(item.category as AllowedCategories)) &&
         (!hideCompleted || state[item.uniqueName].completion !== Completion.DONE)
     );
   }, [state, items, categories, hideCompleted]);

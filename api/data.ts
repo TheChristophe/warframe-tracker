@@ -29,34 +29,45 @@ const mergeDuplicateComponents = (items: SimplifiedItem[]): SimplifiedItem[] => 
   });
 };
 
+const _usefulItem = (item: Item) => {
+  // normal items
+  if (
+    ALL_ALLOWED_CATEGORIES.includes(item.category as AllowedCategories) &&
+    // filter out moa / hound parts
+    (item.category === 'Pets' ? item.type !== 'Pet Resource' : true) &&
+    // filter out weird pet duplicates
+    (item.excludeFromCodex ?? false) === false
+  ) {
+    return true;
+  }
+
+  // Amps
+  if (
+    item.category === 'Misc' &&
+    item.type === 'Amp' &&
+    item.name.toLowerCase().includes('prism')
+  ) {
+    return true;
+  }
+
+  return false;
+};
+
+const _simplifyItem = (item: Item): SimplifiedItem => {
+  const baseSimplified = pick(item, ['uniqueName', 'name', 'category', 'imageName', 'wikiaUrl']);
+  if (item.components == undefined) {
+    return baseSimplified;
+  }
+  return {
+    ...baseSimplified,
+    components: item.components.map((component) =>
+      pick(component, ['uniqueName', 'itemCount', 'name', 'imageName'])
+    ),
+  };
+};
+
 const filterUnusedData = (items: Item[]): SimplifiedItem[] => {
-  return items
-    .filter(
-      (item) =>
-        ALL_ALLOWED_CATEGORIES.includes(item.category as AllowedCategories) &&
-        // filter out moa / hound parts
-        (item.category === 'Pets' ? item.type !== 'Pet Resource' : true) &&
-        // filter out weird pet duplicates
-        (item.excludeFromCodex ?? false) === false
-    )
-    .map((item) => {
-      const baseSimplified = pick(item, [
-        'uniqueName',
-        'name',
-        'category',
-        'imageName',
-        'wikiaUrl',
-      ]);
-      if (item.components == undefined) {
-        return baseSimplified;
-      }
-      return {
-        ...baseSimplified,
-        components: item.components.map((component) =>
-          pick(component, ['uniqueName', 'itemCount', 'name', 'imageName'])
-        ),
-      };
-    });
+  return items.filter((item) => _usefulItem(item)).map(_simplifyItem);
 };
 
 const ITEM_CACHE = 'item-cache';

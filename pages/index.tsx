@@ -6,7 +6,7 @@ import { SaveVersion, StateContext, StateContextProvider } from 'components/Stat
 import ProgressItems from 'components/ProgressItems';
 import { saveAs } from 'file-saver';
 import { fetchItems } from 'api/data';
-import { ALL_ALLOWED_CATEGORIES, AllowedCategories, SimplifiedItem } from 'utility/types';
+import { AllowedCategories, SimplifiedItem } from 'utility/types';
 import { debounce, isEqual } from 'lodash';
 import clsx from 'clsx';
 
@@ -25,24 +25,12 @@ const Button: FC<PropsWithChildren<ButtonProps>> = ({ children, onClick, classNa
   );
 };
 
-const ALL_CATEGORIES: AllowedCategories[] = [
-  'Primary',
-  'Secondary',
-  'Melee',
-  'Warframes',
-  'Arch-Gun',
-  'Arch-Melee',
-  'Archwing',
-  'Pets',
-  'Sentinels',
-];
-
 type HomeProps = {
   items: SimplifiedItem[];
 };
 const Home: NextPage<HomeProps> = ({ items }) => {
   const { state, dispatch } = useContext(StateContext);
-  const [active, setActive] = useState<AllowedCategories[]>(ALL_CATEGORIES);
+  const [active, setActive] = useState<AllowedCategories[]>([]);
   const [hideCompleted, setHideCompleted] = useState(true);
 
   const [filter, setFilter] = useState<string>('');
@@ -89,10 +77,10 @@ const Home: NextPage<HomeProps> = ({ items }) => {
         <div className="pt-2 px-2">
           <Button
             onClick={() => {
-              setActive(ALL_CATEGORIES);
+              setActive([]);
               clearFilter();
             }}
-            className={clsx('mb-1', isEqual(active, ALL_CATEGORIES) && 'underline')}
+            className={clsx('mb-1', active.length === 0 && 'underline')}
           >
             All
           </Button>
@@ -213,7 +201,7 @@ const Home: NextPage<HomeProps> = ({ items }) => {
       </div>
       <ProgressItems
         items={filtered}
-        categories={filter.length ? ALL_ALLOWED_CATEGORIES : active}
+        categories={filter.length ? [] : active}
         hideCompleted={hideCompleted}
       />
     </>
