@@ -1,4 +1,4 @@
-import React, { createContext, ReactNode, useEffect, useReducer } from 'react';
+import React, { createContext, Dispatch, PropsWithChildren, useEffect, useReducer } from 'react';
 import { Item } from 'warframe-items';
 import { debounce } from 'lodash';
 import { SimplifiedComponent, SimplifiedItem } from 'utility/types';
@@ -54,7 +54,7 @@ type Action =
 const INITIAL_STATE = {};
 type StateContext = {
   state: State;
-  dispatch: React.Dispatch<Action>;
+  dispatch: Dispatch<Action>;
   itemsByName: Record<string, Item>;
 };
 export const StateContext = createContext<StateContext>({
@@ -141,11 +141,10 @@ const reducer = (state: State, action: Action) => {
   }
 };
 
-type StateContextProviderProps = {
+type StateContextProviderProps = PropsWithChildren<{
   items: Item[];
   itemsByName: Record<string, Item>;
-  children: ReactNode;
-};
+}>;
 export const StateContextProvider: React.FC<StateContextProviderProps> = ({
   children,
   items,

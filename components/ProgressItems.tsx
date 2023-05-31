@@ -1,24 +1,45 @@
 import { FC, useContext, useMemo } from 'react';
 import ProgressItem from 'components/ProgressItem';
 import { Completion, StateContext } from './StateContext';
-import { AllowedCategories, SimplifiedItem } from 'utility/types';
+import { SimplifiedItem } from 'utility/types';
 import { VirtuosoGrid } from 'react-virtuoso';
+import { Filter, FilterMatch, FilterMode, FilterRule } from 'lib/filters';
+import { isEqual } from 'lodash';
 
+const matchesFilter = (item: SimplifiedItem, filter: Filter) =>
+  // handle AND (every filter must match) and OR (at least one filter must match)
+  Object.values(filter.filters)[filter.mode === FilterMode.AND ? 'every' : 'some']((value) =>
+    // match every field in the filter
+    Object.entries(value).every(([key, value]) => {
+      // filters are only defined in software, should always be legal
+      const comparedTo = item[key as keyof FilterRule];
+      // targets don't need to exactly match
+      if (filter.match === FilterMatch.Partial) {
+        //if (Array.isArray(comparedTo) && Array.isArray(value)) {
+        //  return value.every((v) => item[key as keyof SimplifiedItem]?.includes(v));
+        //}
+        return !!comparedTo?.includes(value);
+      }
+      return isEqual(comparedTo, value);
+    })
+  );
 type ProgressItemsProps = {
   items: SimplifiedItem[];
-  categories: AllowedCategories[];
+  filter?: Filter;
   hideCompleted: boolean;
 };
-const ProgressItems: FC<ProgressItemsProps> = ({ items, categories, hideCompleted }) => {
+const ProgressItems: FC<ProgressItemsProps> = ({ items, filter, hideCompleted }) => {
   const { state } = useContext(StateContext);
 
-  const allowedItems = useMemo(() => {
-    return items.filter(
-      (item) =>
-        (categories.length === 0 || categories.includes(item.category as AllowedCategories)) &&
-        (!hideCompleted || state[item.uniqueName].completion !== Completion.DONE)
-    );
-  }, [state, items, categories, hideCompleted]);
+  const allowedItems = useMemo(
+    () =>
+      items.filter(
+        (item) =>
+          (filter === undefined || filter.filters.length === 0 || matchesFilter(item, filter)) &&
+          (!hideCompleted || state[item.uniqueName].completion !== Completion.DONE)
+      ),
+    [state, items, filter, hideCompleted]
+  );
 
   return (
     <VirtuosoGrid

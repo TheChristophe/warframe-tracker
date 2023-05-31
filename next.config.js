@@ -4,10 +4,10 @@ const nextConfig = {
   images: {
     domains: ['cdn.warframestat.us'],
     formats: ['image/avif', 'image/webp'],
-    minimumCacheTTL: 604800
+    minimumCacheTTL: 2419200,
   },
   // for my private website, remove if desired
-  basePath: "/warframe-tracker"
+  //basePath: '/warframe-tracker',
 };
 
 module.exports = nextConfig;

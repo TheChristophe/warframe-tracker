@@ -78,6 +78,9 @@ export const fetchItems = async (): Promise<SimplifiedItem[]> => {
   } else {
     const hours = 24;
     const res = await fetch('https://api.warframestat.us/items');
+    if (!res.ok) {
+      throw new Error('API is down');
+    }
     const data = mergeDuplicateComponents(filterUnusedData((await res.json()) as Item[]));
     cacheData.put(ITEM_CACHE, data, hours * 1000 * 60 * 60);
     return data;

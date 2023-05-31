@@ -17,9 +17,11 @@ FROM base as production
 ENV NODE_ENV=production
 
 RUN yarn build
+EXPOSE 3000
 CMD ["yarn", "start"]
 
 FROM base as development
 ENV NODE_ENV=development
 
+EXPOSE 3000
 CMD [ "yarn", "dev" ]

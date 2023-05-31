@@ -6,9 +6,10 @@ import { SaveVersion, StateContext, StateContextProvider } from 'components/Stat
 import ProgressItems from 'components/ProgressItems';
 import { saveAs } from 'file-saver';
 import { fetchItems } from 'api/data';
-import { AllowedCategories, SimplifiedItem } from 'utility/types';
-import { debounce, isEqual } from 'lodash';
+import { SimplifiedItem } from 'utility/types';
+import { debounce } from 'lodash';
 import clsx from 'clsx';
+import Filters, { Filter, FilterType } from 'lib/filters';
 
 type ButtonProps = {
   onClick?: MouseEventHandler<HTMLButtonElement>;
@@ -30,7 +31,7 @@ type HomeProps = {
 };
 const Home: NextPage<HomeProps> = ({ items }) => {
   const { state, dispatch } = useContext(StateContext);
-  const [active, setActive] = useState<AllowedCategories[]>([]);
+  const [active, setActive] = useState<Filter>(Filters.ALL);
   const [hideCompleted, setHideCompleted] = useState(true);
 
   const [filter, setFilter] = useState<string>('');
@@ -77,67 +78,64 @@ const Home: NextPage<HomeProps> = ({ items }) => {
         <div className="pt-2 px-2">
           <Button
             onClick={() => {
-              setActive([]);
+              setActive(Filters.ALL);
               clearFilter();
             }}
-            className={clsx('mb-1', active.length === 0 && 'underline')}
+            className={clsx('mb-1', active.id === FilterType.All && 'underline')}
           >
             All
           </Button>
           <Button
             onClick={() => {
-              setActive(['Primary']);
+              setActive(Filters.PRIMARY);
               clearFilter();
             }}
-            className={clsx('mb-1', isEqual(active, ['Primary']) && 'underline')}
+            className={clsx('mb-1', active.id === FilterType.Primary && 'underline')}
           >
             Primary
           </Button>
           <Button
             onClick={() => {
-              setActive(['Secondary']);
+              setActive(Filters.SECONDARY);
               clearFilter();
             }}
-            className={clsx('mb-1', isEqual(active, ['Secondary']) && 'underline')}
+            className={clsx('mb-1', active.id === FilterType.Secondary && 'underline')}
           >
             Secondary
           </Button>
           <Button
             onClick={() => {
-              setActive(['Melee']);
+              setActive(Filters.MELEE);
               clearFilter();
             }}
-            className={clsx('mb-1', isEqual(active, ['Melee']) && 'underline')}
+            className={clsx('mb-1', active.id === FilterType.Melee && 'underline')}
           >
             Melee
           </Button>
           <Button
             onClick={() => {
-              setActive(['Warframes']);
+              setActive(Filters.WARFRAME);
               clearFilter();
             }}
-            className={clsx('mb-1', isEqual(active, ['Warframes']) && 'underline')}
+            className={clsx('mb-1', active.id === FilterType.Warframe && 'underline')}
           >
             Warframes
           </Button>
           <Button
             onClick={() => {
-              setActive(['Arch-Gun', 'Arch-Melee', 'Archwing']);
+              setActive(Filters.ARCHWING);
               clearFilter();
             }}
-            className={clsx(
-              'mb-1',
-              isEqual(active, ['Arch-Gun', 'Arch-Melee', 'Archwing']) && 'underline'
-            )}
+            className={clsx('mb-1', active.id === FilterType.Archwing && 'underline')}
           >
             Archwing
           </Button>
           <Button
             onClick={() => {
-              setActive(['Pets', 'Sentinels']);
+              setActive(Filters.COMPANION);
               clearFilter();
             }}
-            className={clsx('mb-1', isEqual(active, ['Pets', 'Sentinels']) && 'underline')}
+            className={clsx('mb-1', active.id === FilterType.Companion && 'underline')}
           >
             Companions
           </Button>
@@ -201,7 +199,7 @@ const Home: NextPage<HomeProps> = ({ items }) => {
       </div>
       <ProgressItems
         items={filtered}
-        categories={filter.length ? [] : active}
+        filter={filter.length ? undefined : active}
         hideCompleted={hideCompleted}
       />
     </>

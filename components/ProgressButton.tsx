@@ -1,4 +1,5 @@
 import { FC, PropsWithChildren } from 'react';
+import clsx from 'clsx';
 
 type ProgressButtonProps = {
   onClick: () => void;
@@ -10,7 +11,7 @@ const ProgressButton: FC<PropsWithChildren<ProgressButtonProps>> = ({
   className,
 }) => {
   return (
-    <button onClick={onClick} className={'w-6 h-6 ' + (className ? className : '')}>
+    <button onClick={onClick} className={clsx('w-6 h-6', className)}>
       {children}
     </button>
   );
