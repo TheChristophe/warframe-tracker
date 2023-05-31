@@ -8,6 +8,8 @@ const nextConfig = {
   },
   // for my private website, remove if desired
   //basePath: '/warframe-tracker',
+  // improves container size by a lot, read up here https://nextjs.org/docs/pages/api-reference/next-config-js/output
+  output: 'standalone',
 };
 
 module.exports = nextConfig;
