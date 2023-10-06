@@ -21,7 +21,7 @@ const matchesFilter = (item: SimplifiedItem, filter: Filter) =>
         return !!comparedTo?.includes(value);
       }
       return isEqual(comparedTo, value);
-    })
+    }),
   );
 type ProgressItemsProps = {
   items: SimplifiedItem[];
@@ -36,9 +36,9 @@ const ProgressItems: FC<ProgressItemsProps> = ({ items, filter, hideCompleted })
       items.filter(
         (item) =>
           (filter === undefined || filter.filters.length === 0 || matchesFilter(item, filter)) &&
-          (!hideCompleted || state[item.uniqueName].completion !== Completion.DONE)
+          (!hideCompleted || state[item.uniqueName].completion !== Completion.DONE),
       ),
-    [state, items, filter, hideCompleted]
+    [state, items, filter, hideCompleted],
   );
 
   return (
@@ -49,7 +49,7 @@ const ProgressItems: FC<ProgressItemsProps> = ({ items, filter, hideCompleted })
       overscan={3000}
       data={allowedItems}
       itemContent={(index, data) => <ProgressItem item={data} />}
-      listClassName="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 "
+      listClassName="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
       computeItemKey={(i) => allowedItems[i].uniqueName}
     />
   );

@@ -19,7 +19,7 @@ const Button: FC<PropsWithChildren<ButtonProps>> = ({ children, onClick, classNa
   return (
     <button
       onClick={onClick}
-      className={'bg-gray-700 text-white p-3 rounded-md mr-2 ' + (className ? className : '')}
+      className={clsx('mr-2 rounded-md bg-gray-700 p-3 text-white', className)}
     >
       {children}
     </button>
@@ -40,7 +40,7 @@ const Home: NextPage<HomeProps> = ({ items }) => {
       return items;
     }
     return items.filter(
-      (item) => item.name.toLowerCase().includes(filter) // || item.uniqueName.toLowerCase().includes(filter)
+      (item) => item.name.toLowerCase().includes(filter), // || item.uniqueName.toLowerCase().includes(filter)
     );
   }, [filter, items]);
 
@@ -49,7 +49,7 @@ const Home: NextPage<HomeProps> = ({ items }) => {
       debounce((filter: string) => {
         setFilter(filter);
       }, 100),
-    [setFilter]
+    [setFilter],
   );
   const clearFilter = useMemo(
     () =>
@@ -57,7 +57,7 @@ const Home: NextPage<HomeProps> = ({ items }) => {
         setFilter('');
         (document.getElementById('filter') as HTMLInputElement).value = '';
       }, 100),
-    [setFilter]
+    [setFilter],
   );
 
   const exportSave = () => {
@@ -75,7 +75,7 @@ const Home: NextPage<HomeProps> = ({ items }) => {
         {/*<link rel="icon" type="image/png" href="/favicon.png" />*/}
       </Head>
       <div className="flex flex-row">
-        <div className="pt-2 px-2">
+        <div className="px-2 pt-2">
           <Button
             onClick={() => {
               setActive(Filters.ALL);
@@ -140,7 +140,7 @@ const Home: NextPage<HomeProps> = ({ items }) => {
             Companions
           </Button>
           <div
-            className="bg-gray-700 text-white p-3 rounded-md mr-2 mb-1 inline-block"
+            className="mr-2 mb-1 inline-block rounded-md bg-gray-700 p-3 text-white"
             style={{ whiteSpace: 'nowrap' }}
           >
             <input
@@ -158,12 +158,12 @@ const Home: NextPage<HomeProps> = ({ items }) => {
               updateFilter(e.target.value.toLowerCase());
             }}
             id="filter"
-            className="p-2 rounded h-auto mb-1"
+            className="mb-1 h-auto rounded p-2"
             placeholder="Search..."
           />
         </div>
         <div className="grow"></div>
-        <div className="pt-2 px-2">
+        <div className="px-2 pt-2">
           <Button
             onClick={() => {
               document.getElementById('file-picker')?.click();

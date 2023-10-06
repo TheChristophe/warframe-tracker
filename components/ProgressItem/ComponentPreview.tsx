@@ -3,6 +3,7 @@ import { imagePath } from 'utility/images';
 import { StateContext } from 'components/StateContext';
 import { SimplifiedComponent, SimplifiedItemWithComponents } from 'utility/types';
 import Image from 'next/image';
+import clsx from 'clsx';
 
 type ComponentPreviewLayoutProps = {
   component: SimplifiedComponent;
@@ -19,7 +20,7 @@ const _ComponentPreviewLayout: FC<ComponentPreviewLayoutProps> = ({
   onChange,
 }) => {
   return (
-    <li className="grow flex flex-col" style={{ maxWidth: width }}>
+    <li className="flex grow flex-col" style={{ maxWidth: width }}>
       <div
         className={
           'grow-0 p-1 ' +
@@ -44,26 +45,26 @@ const _ComponentPreviewLayout: FC<ComponentPreviewLayoutProps> = ({
             style={{
               objectFit: 'contain',
             }}
-            className="w-12 h-12 mx-auto"
+            className="mx-auto h-12 w-12"
             loading="lazy"
           />
         ) : (
           component.name
         )}
       </div>
-      <div className="grow-0 w-full">
-        <small className="px-1 text-center w-full inline-block">{component.itemCount}</small>
-        <div className={'p-1 ' + (component.itemCount === 1 ? 'hidden' : '')}>
+      <div className="w-full grow-0">
+        <small className="inline-block w-full px-1 text-center">{component.itemCount}</small>
+        <div className={clsx('p-1', component.itemCount === 1 && 'hidden')}>
           <input
             type="number"
-            className={
-              'w-full p-1 text-sm ' +
-              (count == component.itemCount
+            className={clsx(
+              'w-full p-1 text-sm',
+              count == component.itemCount
                 ? 'bg-lime-200'
                 : count == 0
                 ? 'bg-red-200'
-                : 'bg-amber-200')
-            }
+                : 'bg-amber-200',
+            )}
             value={count}
             onChange={onChange}
           />

@@ -155,18 +155,21 @@ export const StateContextProvider: React.FC<StateContextProviderProps> = ({
     items.reduce((state: State, item: Item) => {
       state[item.uniqueName] = {
         components:
-          item.components?.reduce((componentProgress, component) => {
-            return {
-              ...componentProgress,
-              [component.uniqueName]: {
-                count: 0,
-              },
-            };
-          }, {} as Progress['components']) ?? {},
+          item.components?.reduce(
+            (componentProgress, component) => {
+              return {
+                ...componentProgress,
+                [component.uniqueName]: {
+                  count: 0,
+                },
+              };
+            },
+            {} as Progress['components'],
+          ) ?? {},
         completion: Completion.MISSING_EVERYTHING,
       };
       return state;
-    }, {})
+    }, {}),
   );
 
   useEffect(() => {
