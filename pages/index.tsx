@@ -18,7 +18,7 @@ type ButtonProps = {
 const Button: FC<PropsWithChildren<ButtonProps>> = ({ children, onClick, className }) => (
   <button
     onClick={onClick}
-    className={clsx('mr-2 rounded-md bg-gray-700 p-3 text-white', className)}
+    className={clsx('mr-2 rounded-md bg-gray-700 p-3 text-white shadow-md', className)}
   >
     {children}
   </button>
@@ -122,7 +122,7 @@ const Home: NextPage<HomeProps> = ({ items }) => {
           >
             Companions
           </FilterButton>
-          <div className="mr-2 mb-1 inline-block whitespace-nowrap rounded-md bg-gray-700 p-3 text-white">
+          <div className="mr-2 mb-1 inline-block whitespace-nowrap rounded-md bg-gray-700 p-3 text-white shadow-md">
             <input
               name="hide-checked"
               type="checkbox"
@@ -138,7 +138,7 @@ const Home: NextPage<HomeProps> = ({ items }) => {
               updateFilter(e.target.value.toLowerCase());
             }}
             id="filter"
-            className="mb-1 h-auto rounded p-2"
+            className="mb-1 h-auto rounded p-2 shadow-md"
             placeholder="Search..."
           />
         </div>
@@ -174,7 +174,9 @@ const Home: NextPage<HomeProps> = ({ items }) => {
               });
             }}
           />
-          <Button onClick={exportSave}>Export</Button>
+          <Button onClick={exportSave} className="">
+            Export
+          </Button>
         </div>
       </div>
       <ProgressItems
