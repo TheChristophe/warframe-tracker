@@ -104,5 +104,6 @@ const Filters = {
   ARCHWING,
   COMPANION,
 } as const;
+export type FILTERS = (typeof Filters)[keyof typeof Filters];
 
 export default Filters;

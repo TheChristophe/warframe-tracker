@@ -9,22 +9,30 @@ import { fetchItems } from 'api/data';
 import { SimplifiedItem } from 'utility/types';
 import { debounce } from 'lodash';
 import clsx from 'clsx';
-import Filters, { Filter, FilterType } from 'lib/filters';
+import Filters, { type FILTERS, Filter, FilterType } from 'lib/filters';
 
 type ButtonProps = {
   onClick?: MouseEventHandler<HTMLButtonElement>;
   className?: string;
 };
-const Button: FC<PropsWithChildren<ButtonProps>> = ({ children, onClick, className }) => {
-  return (
-    <button
-      onClick={onClick}
-      className={clsx('mr-2 rounded-md bg-gray-700 p-3 text-white', className)}
-    >
-      {children}
-    </button>
-  );
+const Button: FC<PropsWithChildren<ButtonProps>> = ({ children, onClick, className }) => (
+  <button
+    onClick={onClick}
+    className={clsx('mr-2 rounded-md bg-gray-700 p-3 text-white', className)}
+  >
+    {children}
+  </button>
+);
+
+type FilterButtonProps = {
+  onClick: () => void;
+  active: boolean;
 };
+const FilterButton: FC<PropsWithChildren<FilterButtonProps>> = ({ onClick, active, children }) => (
+  <Button onClick={onClick} className={clsx('mb-1', active && 'underline')} aria-current={true}>
+    {children}
+  </Button>
+);
 
 type HomeProps = {
   items: SimplifiedItem[];
@@ -34,30 +42,30 @@ const Home: NextPage<HomeProps> = ({ items }) => {
   const [active, setActive] = useState<Filter>(Filters.ALL);
   const [hideCompleted, setHideCompleted] = useState(true);
 
-  const [filter, setFilter] = useState<string>('');
+  const [activeFilter, setActiveFilter] = useState<string>('');
   const filtered = useMemo(() => {
-    if (filter.length === 0) {
+    if (activeFilter.length === 0) {
       return items;
     }
     return items.filter(
-      (item) => item.name.toLowerCase().includes(filter), // || item.uniqueName.toLowerCase().includes(filter)
+      (item) => item.name.toLowerCase().includes(activeFilter), // || item.uniqueName.toLowerCase().includes(filter)
     );
-  }, [filter, items]);
+  }, [activeFilter, items]);
 
   const updateFilter = useMemo(
     () =>
       debounce((filter: string) => {
-        setFilter(filter);
+        setActiveFilter(filter);
       }, 100),
-    [setFilter],
+    [setActiveFilter],
   );
   const clearFilter = useMemo(
     () =>
       debounce(() => {
-        setFilter('');
+        setActiveFilter('');
         (document.getElementById('filter') as HTMLInputElement).value = '';
       }, 100),
-    [setFilter],
+    [setActiveFilter],
   );
 
   const exportSave = () => {
@@ -65,6 +73,11 @@ const Home: NextPage<HomeProps> = ({ items }) => {
       type: 'text/plain;charset=utf-8',
     });
     saveAs(blob, 'export.json');
+  };
+
+  const filter = (filter: FILTERS) => () => {
+    setActive(filter);
+    clearFilter();
   };
 
   return (
@@ -76,73 +89,40 @@ const Home: NextPage<HomeProps> = ({ items }) => {
       </Head>
       <div className="flex flex-row">
         <div className="px-2 pt-2">
-          <Button
-            onClick={() => {
-              setActive(Filters.ALL);
-              clearFilter();
-            }}
-            className={clsx('mb-1', active.id === FilterType.All && 'underline')}
-          >
+          <FilterButton onClick={filter(Filters.ALL)} active={active.id === FilterType.All}>
             All
-          </Button>
-          <Button
-            onClick={() => {
-              setActive(Filters.PRIMARY);
-              clearFilter();
-            }}
-            className={clsx('mb-1', active.id === FilterType.Primary && 'underline')}
-          >
+          </FilterButton>
+          <FilterButton onClick={filter(Filters.PRIMARY)} active={active.id === FilterType.Primary}>
             Primary
-          </Button>
-          <Button
-            onClick={() => {
-              setActive(Filters.SECONDARY);
-              clearFilter();
-            }}
-            className={clsx('mb-1', active.id === FilterType.Secondary && 'underline')}
+          </FilterButton>
+          <FilterButton
+            onClick={filter(Filters.SECONDARY)}
+            active={active.id === FilterType.Secondary}
           >
             Secondary
-          </Button>
-          <Button
-            onClick={() => {
-              setActive(Filters.MELEE);
-              clearFilter();
-            }}
-            className={clsx('mb-1', active.id === FilterType.Melee && 'underline')}
-          >
+          </FilterButton>
+          <FilterButton onClick={filter(Filters.MELEE)} active={active.id === FilterType.Melee}>
             Melee
-          </Button>
-          <Button
-            onClick={() => {
-              setActive(Filters.WARFRAME);
-              clearFilter();
-            }}
-            className={clsx('mb-1', active.id === FilterType.Warframe && 'underline')}
+          </FilterButton>
+          <FilterButton
+            onClick={filter(Filters.WARFRAME)}
+            active={active.id === FilterType.Warframe}
           >
             Warframes
-          </Button>
-          <Button
-            onClick={() => {
-              setActive(Filters.ARCHWING);
-              clearFilter();
-            }}
-            className={clsx('mb-1', active.id === FilterType.Archwing && 'underline')}
+          </FilterButton>
+          <FilterButton
+            onClick={filter(Filters.ARCHWING)}
+            active={active.id === FilterType.Archwing}
           >
             Archwing
-          </Button>
-          <Button
-            onClick={() => {
-              setActive(Filters.COMPANION);
-              clearFilter();
-            }}
-            className={clsx('mb-1', active.id === FilterType.Companion && 'underline')}
+          </FilterButton>
+          <FilterButton
+            onClick={filter(Filters.COMPANION)}
+            active={active.id === FilterType.Companion}
           >
             Companions
-          </Button>
-          <div
-            className="mr-2 mb-1 inline-block rounded-md bg-gray-700 p-3 text-white"
-            style={{ whiteSpace: 'nowrap' }}
-          >
+          </FilterButton>
+          <div className="mr-2 mb-1 inline-block whitespace-nowrap rounded-md bg-gray-700 p-3 text-white">
             <input
               name="hide-checked"
               type="checkbox"
@@ -162,7 +142,7 @@ const Home: NextPage<HomeProps> = ({ items }) => {
             placeholder="Search..."
           />
         </div>
-        <div className="grow"></div>
+        <div className="grow" />
         <div className="px-2 pt-2">
           <Button
             onClick={() => {
