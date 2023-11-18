@@ -18,61 +18,55 @@ const _ComponentPreviewLayout: FC<ComponentPreviewLayoutProps> = ({
   onToggle,
   count,
   onChange,
-}) => {
-  return (
-    <li className="flex grow flex-col" style={{ maxWidth: width }}>
-      <div
-        className={
-          'grow-0 p-1 ' +
-          (count == component.itemCount
-            ? 'bg-lime-200'
-            : count == 0
-            ? 'bg-red-200'
-            : 'bg-amber-200')
-        }
-        title={component.name}
-        role="button"
-        style={{ cursor: 'pointer' }}
-        onClick={onToggle}
-      >
-        {component.imageName ? (
-          <Image
-            src={imagePath(component.imageName)}
-            alt={component.name}
-            referrerPolicy="no-referrer"
-            width={48}
-            height={48}
-            style={{
-              objectFit: 'contain',
-            }}
-            className="mx-auto h-12 w-12"
-            loading="lazy"
-          />
-        ) : (
-          component.name
-        )}
+}) => (
+  <li className="flex grow flex-col" style={{ maxWidth: width }}>
+    <div
+      className={
+        'grow-0 p-1 ' +
+        (count == component.itemCount ? 'bg-lime-200' : count == 0 ? 'bg-red-200' : 'bg-amber-200')
+      }
+      title={component.name}
+      role="button"
+      style={{ cursor: 'pointer' }}
+      onClick={onToggle}
+    >
+      {component.imageName ? (
+        <Image
+          src={imagePath(component.imageName)}
+          alt={component.name}
+          referrerPolicy="no-referrer"
+          width={48}
+          height={48}
+          style={{
+            objectFit: 'contain',
+          }}
+          className="mx-auto h-12 w-12"
+          loading="lazy"
+        />
+      ) : (
+        component.name
+      )}
+    </div>
+    <div className="w-full grow-0">
+      <small className="inline-block w-full px-1 text-center">{component.itemCount}</small>
+      <div className={clsx('p-1', component.itemCount === 1 && 'hidden')}>
+        <input
+          type="number"
+          className={clsx(
+            'w-full p-1 text-sm',
+            count == component.itemCount
+              ? 'bg-lime-200'
+              : count == 0
+              ? 'bg-red-200'
+              : 'bg-amber-200',
+          )}
+          value={count}
+          onChange={onChange}
+        />
       </div>
-      <div className="w-full grow-0">
-        <small className="inline-block w-full px-1 text-center">{component.itemCount}</small>
-        <div className={clsx('p-1', component.itemCount === 1 && 'hidden')}>
-          <input
-            type="number"
-            className={clsx(
-              'w-full p-1 text-sm',
-              count == component.itemCount
-                ? 'bg-lime-200'
-                : count == 0
-                ? 'bg-red-200'
-                : 'bg-amber-200',
-            )}
-            value={count}
-            onChange={onChange}
-          />
-        </div>
-      </div>
-    </li>
-  );
-};
+    </div>
+  </li>
+);
 const ComponentPreviewLayout = memo(_ComponentPreviewLayout);
 
 type ComponentPreviewProps = {

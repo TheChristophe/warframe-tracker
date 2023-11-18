@@ -4,18 +4,13 @@ import { imagePath } from 'utility/images';
 import ComponentPreview from './ComponentPreview';
 import { SimplifiedItem } from 'utility/types';
 import Image from 'next/image';
+import clsx from 'clsx';
+import styles from './index.module.scss';
 
-const isCraftable = (item: SimplifiedItem) => {
-  return (
-    'components' in item &&
-    ((item.components.length == 1 && item.components[0].name !== 'Blueprint') || // TODO: any such example?
-      item.components.length > 1)
-  );
-};
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const ensureUnreachable = (nothing: never) => undefined;
-
+const isCraftable = (item: SimplifiedItem) =>
+  'components' in item &&
+  ((item.components.length == 1 && item.components[0].name !== 'Blueprint') || // TODO: any such example?
+    item.components.length > 1);
 const completionString = (completion: Completion) => {
   switch (completion) {
     case Completion.MISSING_EVERYTHING:
@@ -27,7 +22,6 @@ const completionString = (completion: Completion) => {
     case Completion.DONE:
       return 'Done';
   }
-  ensureUnreachable(completion);
 };
 
 type ProgressItemProps = {
@@ -53,8 +47,13 @@ const ProgressItem: FC<ProgressItemProps> = ({ item }) => {
   }
 
   return (
-    <div className="border shadow border-black border-neutral-600 bg-slate-200 flex divide-x divide-black h-40 m-2  overflow-hidden ">
-      <div className={'p-2 w-32 shrink-0 overflow-hidden shadow-inner-thicc ' + background}>
+    <div
+      className={clsx(
+        'm-2 flex h-40 divide-x divide-black overflow-hidden border border-neutral-600 bg-slate-200 shadow',
+        styles['fadeIn'],
+      )}
+    >
+      <div className={clsx('w-32 shrink-0 overflow-hidden p-2 shadow-inner-thicc', background)}>
         {item.imageName && (
           <div className="relative w-full">
             <Image
@@ -85,24 +84,24 @@ const ProgressItem: FC<ProgressItemProps> = ({ item }) => {
                 }
               }}
             />
-            <small className="text-center w-full inline-block">{completionString(completed)}</small>
+            <small className="inline-block w-full text-center">{completionString(completed)}</small>
           </div>
         )}
       </div>
-      <div className="grow flex">
-        <div className="grow p-2 relative flex-col">
+      <div className="flex grow">
+        <div className="relative grow flex-col p-2">
           <p className="grow-0">
             {item.name}{' '}
             {item.wikiaUrl && (
               <small>
-                <a href={item.wikiaUrl} className="underline text-cyan-800">
+                <a href={item.wikiaUrl} className="text-cyan-800 underline">
                   Wiki
                 </a>
               </small>
             )}
           </p>
           {craftable && 'components' in item && (
-            <ul className="grow flex flex-row">
+            <ul className="flex grow flex-row">
               {item.components.map((component, i) => (
                 <ComponentPreview
                   key={component.uniqueName + i}

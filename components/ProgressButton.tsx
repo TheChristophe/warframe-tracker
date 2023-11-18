@@ -9,12 +9,10 @@ const ProgressButton: FC<PropsWithChildren<ProgressButtonProps>> = ({
   onClick,
   children,
   className,
-}) => {
-  return (
-    <button onClick={onClick} className={clsx('h-6 w-6', className)}>
-      {children}
-    </button>
-  );
-};
+}) => (
+  <button onClick={onClick} className={clsx('h-6 w-6', className)}>
+    {children}
+  </button>
+);
 
 export default ProgressButton;
