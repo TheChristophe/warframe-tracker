@@ -13,44 +13,51 @@ export enum Completion {
   DONE,
 }
 
+type ComponentProgress = { count: number };
 export type Progress = {
-  components: Record<
-    string,
-    {
-      count: number;
-    }
-  >;
+  components: Record<string, ComponentProgress>;
   completion: Completion;
 };
 
-export enum SaveVersion {
-  VERSION_0,
-}
+export const SaveVersion = {
+  VERSION_0: 0,
+} as const;
+export type SaveVersion = (typeof SaveVersion)[keyof typeof SaveVersion];
 export type State = Record<string, Progress>;
 export type Export = {
   state: State;
   version: SaveVersion;
 };
 
+const Actions = {
+  SetComponentCount: 'setComponentCount',
+  SetCompleted: 'setCompleted',
+  Autosave: 'autosave',
+  Autoload: 'autoload',
+  Import: 'import',
+} as const;
+//type Actions = (typeof Actions)[keyof typeof Actions];
+
 type Action =
   | {
-      type: 'setComponentCount';
+      type: typeof Actions.SetComponentCount;
       item: SimplifiedItem;
       component: SimplifiedComponent;
       count: number;
     }
   | {
-      type: 'setCompleted';
+      type: typeof Actions.SetCompleted;
       item: SimplifiedItem;
       completion: Completion;
     }
   | {
-      type: 'autosave';
+      type: typeof Actions.Autosave;
     }
   | {
-      type: 'autoload';
+      type: typeof Actions.Autoload;
     }
-  | { type: 'import'; data: Export };
+  | { type: typeof Actions.Import; data: Export };
+
 const INITIAL_STATE = {};
 type StateContext = {
   state: State;
@@ -63,9 +70,7 @@ export const StateContext = createContext<StateContext>({
   itemsByName: {},
 });
 
-const save = (state: State) => {
-  localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(state));
-};
+const save = (state: State) => localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(state));
 
 const autosave = debounce((state: State) => {
   if (state !== undefined) {
@@ -75,35 +80,25 @@ const autosave = debounce((state: State) => {
 
 const reducer = (state: State, action: Action) => {
   switch (action.type) {
-    case 'setComponentCount': {
-      console.info('setComponentCount');
-      const newState: State = {
-        ...state,
-        [action.item.uniqueName]: {
-          ...state[action.item.uniqueName],
-          components: {
-            ...state[action.item.uniqueName].components,
-            [action.component.uniqueName]: { count: action.count },
-          },
-        },
-      };
+    case Actions.SetComponentCount: {
+      const newState = { ...state };
+
+      newState[action.item.uniqueName]['components'][action.component.uniqueName].count =
+        action.count;
       if ('components' in action.item) {
         newState[action.item.uniqueName].completion =
           determineCompletion(action.item, newState[action.item.uniqueName]) ??
           Completion.MISSING_EVERYTHING;
       }
+
       autosave(newState);
       return newState;
     }
-    case 'setCompleted': {
-      console.info('setCompleted');
-      const newState: State = {
-        ...state,
-        [action.item.uniqueName]: {
-          ...state[action.item.uniqueName],
-          completion: action.completion,
-        },
-      };
+
+    case Actions.SetCompleted: {
+      const newState = { ...state };
+
+      newState[action.item.uniqueName].completion = action.completion;
       if ('components' in action.item) {
         if (action.completion === Completion.MISSING_EVERYTHING) {
           action.item.components.map((component) => {
@@ -116,14 +111,17 @@ const reducer = (state: State, action: Action) => {
           });
         }
       }
+
       autosave(newState);
       return newState;
     }
-    case 'autosave':
+
+    case Actions.Autosave:
       console.info('autosave');
       autosave(state);
       return state;
-    case 'autoload': {
+
+    case Actions.Autoload: {
       console.info('autoload');
       const autosave = localStorage.getItem(LOCALSTORAGE_KEY);
       if (autosave == null) {
@@ -131,7 +129,8 @@ const reducer = (state: State, action: Action) => {
       }
       return { ...state, ...JSON.parse(autosave) };
     }
-    case 'import': {
+
+    case Actions.Import: {
       console.info('import');
       switch (action.data.version) {
         case SaveVersion.VERSION_0:
@@ -157,12 +156,10 @@ export const StateContextProvider: React.FC<StateContextProviderProps> = ({
         components:
           item.components?.reduce(
             (componentProgress, component) => {
-              return {
-                ...componentProgress,
-                [component.uniqueName]: {
-                  count: 0,
-                },
+              componentProgress[component.uniqueName] = {
+                count: 0,
               };
+              return componentProgress;
             },
             {} as Progress['components'],
           ) ?? {},

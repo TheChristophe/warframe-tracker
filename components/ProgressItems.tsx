@@ -8,6 +8,7 @@ import { isEqual } from 'lodash';
 
 const matchesFilter = (item: SimplifiedItem, filter: Filter) =>
   // handle AND (every filter must match) and OR (at least one filter must match)
+  // either calls Array.every or Array.some (would like a more readable way)
   Object.values(filter.filters)[filter.mode === FilterMode.AND ? 'every' : 'some']((value) =>
     // match every field in the filter
     Object.entries(value).every(([key, value]) => {
@@ -18,11 +19,12 @@ const matchesFilter = (item: SimplifiedItem, filter: Filter) =>
         //if (Array.isArray(comparedTo) && Array.isArray(value)) {
         //  return value.every((v) => item[key as keyof SimplifiedItem]?.includes(v));
         //}
-        return !!comparedTo?.includes(value);
+        return comparedTo?.includes(value) === true;
       }
       return isEqual(comparedTo, value);
     }),
   );
+
 type ProgressItemsProps = {
   items: SimplifiedItem[];
   filter?: Filter;
