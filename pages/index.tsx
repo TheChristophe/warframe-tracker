@@ -47,46 +47,48 @@ type HomeProps = {
 };
 const Home: NextPage<HomeProps> = ({ items }) => {
   const { state, dispatch } = useContext(StateContext);
-  const [active, setActive] = useState<Filter>(Filters.ALL);
+  const [categoryFilter, setCategoryFilter] = useState<Filter>(Filters.ALL);
   const [hideCompleted, setHideCompleted] = useState(true);
 
   const filePicker = useRef<HTMLInputElement>(null);
   const textFilter = useRef<HTMLInputElement>(null);
 
-  const [activeFilter, setActiveFilter] = useState<string>('');
-  const filtered = useMemo(() => {
-    if (activeFilter.length === 0) {
-      return items;
-    }
-    return items.filter((item) => item.name.toLowerCase().includes(activeFilter));
-  }, [activeFilter, items]);
+  const [nameFilter, setNameFilter] = useState<string>('');
+  const nameFiltered = useMemo(
+    () =>
+      nameFilter.length !== 0
+        ? items.filter((item) => item.name.toLowerCase().includes(nameFilter))
+        : items,
+    [nameFilter, items],
+  );
 
-  const updateFilter = useMemo(
+  const updateNameFilter = useMemo(
     () =>
       debounce((filter: string) => {
-        setActiveFilter(filter);
+        setNameFilter(filter);
       }, 100),
-    [setActiveFilter],
+    [setNameFilter],
   );
-  const clearFilter = useMemo(
+  const clearNameFilter = useMemo(
     () =>
       debounce(() => {
-        setActiveFilter('');
+        setNameFilter('');
         textFilter.current && (textFilter.current.value = '');
       }, 100),
-    [setActiveFilter],
+    [setNameFilter],
   );
 
-  const exportSave = () => {
-    const blob = new Blob([JSON.stringify({ state, version: SaveVersion.VERSION_0 })], {
-      type: 'text/plain;charset=utf-8',
-    });
-    saveAs(blob, 'export.json');
-  };
+  const exportSave = () =>
+    saveAs(
+      new Blob([JSON.stringify({ state, version: SaveVersion.VERSION_0 })], {
+        type: 'text/plain;charset=utf-8',
+      }),
+      'export.json',
+    );
 
-  const filter = (filter: FILTERS) => () => {
-    setActive(filter);
-    clearFilter();
+  const updateCategoryFilter = (filter: FILTERS) => () => {
+    setCategoryFilter(filter);
+    clearNameFilter();
   };
 
   return (
@@ -97,36 +99,45 @@ const Home: NextPage<HomeProps> = ({ items }) => {
       </Head>
       <div className="flex flex-row">
         <div className="px-2 pt-2">
-          <FilterButton onClick={filter(Filters.ALL)} active={active.id === FilterType.All}>
+          <FilterButton
+            onClick={updateCategoryFilter(Filters.ALL)}
+            active={categoryFilter.id === FilterType.All}
+          >
             All
           </FilterButton>
-          <FilterButton onClick={filter(Filters.PRIMARY)} active={active.id === FilterType.Primary}>
+          <FilterButton
+            onClick={updateCategoryFilter(Filters.PRIMARY)}
+            active={categoryFilter.id === FilterType.Primary}
+          >
             Primary
           </FilterButton>
           <FilterButton
-            onClick={filter(Filters.SECONDARY)}
-            active={active.id === FilterType.Secondary}
+            onClick={updateCategoryFilter(Filters.SECONDARY)}
+            active={categoryFilter.id === FilterType.Secondary}
           >
             Secondary
           </FilterButton>
-          <FilterButton onClick={filter(Filters.MELEE)} active={active.id === FilterType.Melee}>
+          <FilterButton
+            onClick={updateCategoryFilter(Filters.MELEE)}
+            active={categoryFilter.id === FilterType.Melee}
+          >
             Melee
           </FilterButton>
           <FilterButton
-            onClick={filter(Filters.WARFRAME)}
-            active={active.id === FilterType.Warframe}
+            onClick={updateCategoryFilter(Filters.WARFRAME)}
+            active={categoryFilter.id === FilterType.Warframe}
           >
             Warframes
           </FilterButton>
           <FilterButton
-            onClick={filter(Filters.ARCHWING)}
-            active={active.id === FilterType.Archwing}
+            onClick={updateCategoryFilter(Filters.ARCHWING)}
+            active={categoryFilter.id === FilterType.Archwing}
           >
             Archwing
           </FilterButton>
           <FilterButton
-            onClick={filter(Filters.COMPANION)}
-            active={active.id === FilterType.Companion}
+            onClick={updateCategoryFilter(Filters.COMPANION)}
+            active={categoryFilter.id === FilterType.Companion}
           >
             Companions
           </FilterButton>
@@ -140,7 +151,7 @@ const Home: NextPage<HomeProps> = ({ items }) => {
             <label htmlFor="hide-checked">Hide&nbsp;completed</label>
           </div>
           <input
-            onChange={(e) => updateFilter(e.target.value.toLowerCase())}
+            onChange={(e) => updateNameFilter(e.target.value.toLowerCase())}
             ref={textFilter}
             className="mb-1 h-auto rounded p-2 shadow-md"
             placeholder="Search..."
@@ -179,8 +190,8 @@ const Home: NextPage<HomeProps> = ({ items }) => {
         </div>
       </div>
       <ProgressItems
-        items={filtered}
-        filter={filter.length ? undefined : active}
+        items={nameFiltered}
+        filter={nameFilter.length > 0 ? undefined : categoryFilter}
         hideCompleted={hideCompleted}
       />
     </>
