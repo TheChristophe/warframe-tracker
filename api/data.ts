@@ -17,7 +17,7 @@ const mergeDuplicateComponents = (items: SimplifiedItem[]): SimplifiedItem[] => 
       ...item,
       components: item.components.reduce((components: SimplifiedComponent[], component) => {
         const found = components.find(
-          (component_) => component_.uniqueName == component.uniqueName
+          (component_) => component_.uniqueName == component.uniqueName,
         );
         if (found !== undefined) {
           found.itemCount += component.itemCount;
@@ -61,7 +61,7 @@ const _simplifyItem = (item: Item): SimplifiedItem => {
   return {
     ...baseSimplified,
     components: item.components.map((component) =>
-      pick(component, ['uniqueName', 'itemCount', 'name', 'imageName'])
+      pick(component, ['uniqueName', 'itemCount', 'name', 'imageName']),
     ),
   };
 };
@@ -77,7 +77,9 @@ export const fetchItems = async (): Promise<SimplifiedItem[]> => {
     return value;
   } else {
     const hours = 24;
-    const res = await fetch('https://api.warframestat.us/items');
+    const res = await fetch('https://api.warframestat.us/items/', {
+      redirect: 'follow',
+    });
     if (!res.ok) {
       throw new Error('API is down');
     }
