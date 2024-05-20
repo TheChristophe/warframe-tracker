@@ -1,9 +1,8 @@
-import { Item } from 'warframe-items';
 import { Completion, Progress } from 'components/StateContext';
-import { SimplifiedItem } from './types';
+import { SimplifiedItem, UsefulItem } from './types';
 
-type ItemWithComponents = Omit<Item, 'components'> & {
-  components: Exclude<Item['components'], undefined>;
+type ItemWithComponents = Omit<UsefulItem, 'components'> & {
+  components: Exclude<UsefulItem['components'], undefined>;
 };
 export const determineCompletion = (item: SimplifiedItem, progress: Progress) => {
   if (!('components' in item) || progress.components === undefined) {

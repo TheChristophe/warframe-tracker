@@ -1,7 +1,7 @@
-import { ChangeEventHandler, FC, memo, useContext } from 'react';
+import { type ChangeEventHandler, type FC, memo, useContext } from 'react';
 import { imagePath } from 'utility/images';
 import { StateContext } from 'components/StateContext';
-import { SimplifiedComponent, SimplifiedItemWithComponents } from 'utility/types';
+import { type SimplifiedComponent, type SimplifiedItemWithComponents } from 'utility/types';
 import Image from 'next/image';
 import clsx from 'clsx';
 
@@ -40,7 +40,7 @@ const _ComponentPreviewLayout: FC<ComponentPreviewLayoutProps> = ({
           style={{
             objectFit: 'contain',
           }}
-          className="mx-auto h-12 w-12"
+          className="mx-auto size-12"
           loading="lazy"
         />
       ) : (
@@ -57,8 +57,8 @@ const _ComponentPreviewLayout: FC<ComponentPreviewLayoutProps> = ({
             count == component.itemCount
               ? 'bg-lime-200'
               : count == 0
-              ? 'bg-red-200'
-              : 'bg-amber-200',
+                ? 'bg-red-200'
+                : 'bg-amber-200',
           )}
           value={count}
           onChange={onChange}

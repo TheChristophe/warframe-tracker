@@ -1,8 +1,8 @@
-import { FC, useContext, useMemo } from 'react';
+import { type FC, useContext, useMemo } from 'react';
 import { Completion, StateContext } from 'components/StateContext';
 import { imagePath } from 'utility/images';
 import ComponentPreview from './ComponentPreview';
-import { SimplifiedItem } from 'utility/types';
+import { type SimplifiedItem } from 'utility/types';
 import Image from 'next/image';
 import clsx from 'clsx';
 import styles from './index.module.scss';

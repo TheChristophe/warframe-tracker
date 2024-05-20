@@ -1,9 +1,9 @@
-import { FC, useContext, useMemo } from 'react';
+import { type FC, useContext, useMemo } from 'react';
 import ProgressItem from 'components/ProgressItem';
 import { Completion, StateContext } from './StateContext';
-import { SimplifiedItem } from 'utility/types';
+import { type SimplifiedItem } from 'utility/types';
 import { VirtuosoGrid } from 'react-virtuoso';
-import { Filter, FilterMatch, FilterMode, FilterRule } from 'lib/filters';
+import { type Filter, FilterMatch, FilterMode, type FilterRule } from 'lib/filters';
 import { isEqual } from 'lodash';
 
 const matchesFilter = (item: SimplifiedItem, filter: Filter) =>

@@ -1,10 +1,9 @@
-import type { NextPage } from 'next';
+import { type NextPage } from 'next';
 import Head from 'next/head';
-import { Item } from 'warframe-items';
 import {
-  FC,
-  MouseEventHandler,
-  PropsWithChildren,
+  type FC,
+  type MouseEventHandler,
+  type PropsWithChildren,
   useContext,
   useMemo,
   useRef,
@@ -14,10 +13,10 @@ import { SaveVersion, StateContext, StateContextProvider } from 'components/Stat
 import ProgressItems from 'components/ProgressItems';
 import { saveAs } from 'file-saver';
 import { fetchItems } from 'api/data';
-import { SimplifiedItem } from 'utility/types';
+import { type SimplifiedItem, type UsefulItem } from 'utility/types';
 import { debounce } from 'lodash';
 import clsx from 'clsx';
-import Filters, { type FILTERS, Filter, FilterType } from 'lib/filters';
+import Filters, { type FILTERS, type Filter, FilterType } from 'lib/filters';
 
 type ButtonProps = {
   onClick?: MouseEventHandler<HTMLButtonElement>;
@@ -199,8 +198,8 @@ const Home: NextPage<HomeProps> = ({ items }) => {
 };
 
 type HomeWrappedProps = {
-  items: Item[];
-  itemsByName: Record<string, Item>;
+  items: UsefulItem[];
+  itemsByName: Record<string, UsefulItem>;
 };
 const HomeWrapped: NextPage<HomeWrappedProps> = ({ items, itemsByName }) => (
   <StateContextProvider items={items} itemsByName={itemsByName}>

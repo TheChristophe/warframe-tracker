@@ -4,6 +4,7 @@ import {
   AllowedCategories,
   SimplifiedComponent,
   SimplifiedItem,
+  type UsefulItem,
 } from 'utility/types';
 import cacheData from 'memory-cache';
 import { pick } from 'lodash';
@@ -29,7 +30,7 @@ const mergeDuplicateComponents = (items: SimplifiedItem[]): SimplifiedItem[] => 
   });
 };
 
-const _usefulItem = (item: Item) => {
+const _usefulItem = (item: Item): item is UsefulItem => {
   // normal items
   if (
     ALL_ALLOWED_CATEGORIES.includes(item.category as AllowedCategories) &&
@@ -53,7 +54,7 @@ const _usefulItem = (item: Item) => {
   return false;
 };
 
-const _simplifyItem = (item: Item): SimplifiedItem => {
+const _simplifyItem = (item: UsefulItem): SimplifiedItem => {
   const baseSimplified = pick(item, ['uniqueName', 'name', 'category', 'imageName', 'wikiaUrl']);
   if (item.components == undefined) {
     return baseSimplified;
@@ -67,7 +68,7 @@ const _simplifyItem = (item: Item): SimplifiedItem => {
 };
 
 const filterUnusedData = (items: Item[]): SimplifiedItem[] => {
-  return items.filter((item) => _usefulItem(item)).map(_simplifyItem);
+  return (items.filter((item) => _usefulItem(item)) as UsefulItem[]).map(_simplifyItem);
 };
 
 const ITEM_CACHE = 'item-cache';

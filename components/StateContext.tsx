@@ -1,7 +1,13 @@
-import React, { createContext, Dispatch, PropsWithChildren, useEffect, useReducer } from 'react';
-import { Item } from 'warframe-items';
+import {
+  createContext,
+  type Dispatch,
+  type FC,
+  type PropsWithChildren,
+  useEffect,
+  useReducer,
+} from 'react';
 import { debounce } from 'lodash';
-import { SimplifiedComponent, SimplifiedItem } from 'utility/types';
+import { type SimplifiedComponent, type SimplifiedItem, type UsefulItem } from 'utility/types';
 import { determineCompletion } from 'utility/determineCompletion';
 
 const LOCALSTORAGE_KEY = 'autosave';
@@ -62,7 +68,7 @@ const INITIAL_STATE = {};
 type StateContext = {
   state: State;
   dispatch: Dispatch<Action>;
-  itemsByName: Record<string, Item>;
+  itemsByName: Record<string, UsefulItem>;
 };
 export const StateContext = createContext<StateContext>({
   state: INITIAL_STATE,
@@ -140,18 +146,18 @@ const reducer = (state: State, action: Action) => {
   }
 };
 
-type StateContextProviderProps = PropsWithChildren<{
-  items: Item[];
-  itemsByName: Record<string, Item>;
-}>;
-export const StateContextProvider: React.FC<StateContextProviderProps> = ({
+type StateContextProviderProps = {
+  items: UsefulItem[];
+  itemsByName: Record<string, UsefulItem>;
+};
+export const StateContextProvider: FC<PropsWithChildren<StateContextProviderProps>> = ({
   children,
   items,
   itemsByName,
 }) => {
   const [state, dispatch] = useReducer(
     reducer,
-    items.reduce((state: State, item: Item) => {
+    items.reduce((state: State, item: UsefulItem) => {
       state[item.uniqueName] = {
         components:
           item.components?.reduce(
