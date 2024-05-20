@@ -1,7 +1,8 @@
 FROM node:20-alpine as base
 
 WORKDIR /app
-COPY ["package.json", "yarn.lock*", "next.config.js", "next-env.d.ts", "tsconfig.json", ".eslintrc.json", ".prettierrc", "postcss.config.js", "tailwind.config.js", "./"]
+COPY [".yarn/releases", ".yarn/releases"]
+COPY ["package.json", "yarn.lock*", "next.config.js", "next-env.d.ts", "tsconfig.json", ".eslintrc.json", ".prettierrc", "postcss.config.js", "tailwind.config.js", ".yarnrc.yml", "./"]
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN yarn install
 COPY [".env", "./"]
