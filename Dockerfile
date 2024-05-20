@@ -1,4 +1,4 @@
-FROM node:18-alpine as base
+FROM node:20-alpine as base
 
 WORKDIR /app
 COPY ["package.json", "yarn.lock*", "next.config.js", "next-env.d.ts", "tsconfig.json", ".eslintrc.json", ".prettierrc", "postcss.config.js", "tailwind.config.js", "./"]
@@ -18,7 +18,7 @@ FROM base as prod-build
 
 RUN yarn build
 
-FROM node:18-alpine as production
+FROM node:20-alpine as production
 ENV NODE_ENV=production
 
 WORKDIR /app
