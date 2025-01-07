@@ -9,6 +9,7 @@ import {
 import { debounce } from 'lodash';
 import { type SimplifiedComponent, type SimplifiedItem, type UsefulItem } from 'utility/types';
 import { determineCompletion } from 'utility/determineCompletion';
+import { isIframe } from 'lib/isIframe';
 
 const LOCALSTORAGE_KEY = 'autosave';
 
@@ -76,7 +77,11 @@ export const StateContext = createContext<StateContext>({
   itemsByName: {},
 });
 
-const save = (state: State) => localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(state));
+const save = (state: State) => {
+  if (!isIframe) {
+    localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(state));
+  }
+};
 
 const autosave = debounce((state: State) => {
   if (state !== undefined) {
@@ -129,6 +134,10 @@ const reducer = (state: State, action: Action) => {
 
     case Actions.Autoload: {
       console.info('autoload');
+      if (isIframe) {
+        return state;
+      }
+
       const autosave = localStorage.getItem(LOCALSTORAGE_KEY);
       if (autosave == null) {
         return state;

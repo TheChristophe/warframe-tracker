@@ -5,6 +5,7 @@ import {
   type MouseEventHandler,
   type PropsWithChildren,
   useContext,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -17,6 +18,7 @@ import { type SimplifiedItem, type UsefulItem } from 'utility/types';
 import { debounce } from 'lodash';
 import clsx from 'clsx';
 import Filters, { type FILTERS, type Filter, FilterType } from 'lib/filters';
+import { isIframe } from '../lib/isIframe';
 
 type ButtonProps = {
   onClick?: MouseEventHandler<HTMLButtonElement>;
@@ -48,6 +50,13 @@ const Home: NextPage<HomeProps> = ({ items }) => {
   const { state, dispatch } = useContext(StateContext);
   const [categoryFilter, setCategoryFilter] = useState<Filter>(Filters.ALL);
   const [hideCompleted, setHideCompleted] = useState(true);
+  const [showIframeWarning, setShowIframeWarning] = useState(false);
+
+  useEffect(() => {
+    if (isIframe) {
+      setShowIframeWarning(true);
+    }
+  }, []);
 
   const filePicker = useRef<HTMLInputElement>(null);
   const textFilter = useRef<HTMLInputElement>(null);
@@ -96,6 +105,11 @@ const Home: NextPage<HomeProps> = ({ items }) => {
         <title>Warframe tracker</title>
         <meta name="description" content="Track your Warframe affinity progress!" />
       </Head>
+      {showIframeWarning && (
+        <div className="w-full bg-amber-200 p-1">
+          Running in demo mode, changes will not be saved
+        </div>
+      )}
       <div className="flex flex-row">
         <div className="px-2 pt-2">
           <FilterButton
@@ -158,34 +172,38 @@ const Home: NextPage<HomeProps> = ({ items }) => {
         </div>
         <div className="grow" />
         <div className="px-2 pt-2">
-          <Button onClick={() => filePicker.current?.click()} className="mb-1">
-            Import
-          </Button>
-          <input
-            type="file"
-            className="hidden"
-            ref={filePicker}
-            accept="application/json"
-            onChange={(e) => {
-              if (e.currentTarget.files == null || e.currentTarget.files.length == 0) {
-                return;
-              }
-              const file = e.target.files?.[0];
-              if (file == undefined) {
-                return;
-              }
+          {!showIframeWarning && (
+            <>
+              <Button onClick={() => filePicker.current?.click()} className="mb-1">
+                Import
+              </Button>
+              <input
+                type="file"
+                className="hidden"
+                ref={filePicker}
+                accept="application/json"
+                onChange={(e) => {
+                  if (e.currentTarget.files == null || e.currentTarget.files.length == 0) {
+                    return;
+                  }
+                  const file = e.target.files?.[0];
+                  if (file == undefined) {
+                    return;
+                  }
 
-              file.text().then((text) =>
-                dispatch({
-                  type: 'import',
-                  data: JSON.parse(text),
-                }),
-              );
-            }}
-          />
-          <Button onClick={exportSave} className="">
-            Export
-          </Button>
+                  file.text().then((text) =>
+                    dispatch({
+                      type: 'import',
+                      data: JSON.parse(text),
+                    }),
+                  );
+                }}
+              />
+              <Button onClick={exportSave} className="">
+                Export
+              </Button>
+            </>
+          )}
         </div>
       </div>
       <ProgressItems
