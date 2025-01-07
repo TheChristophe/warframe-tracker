@@ -1,4 +1,4 @@
-FROM node:20-alpine as base
+FROM node:22-alpine AS base
 
 WORKDIR /app
 COPY [".yarn/releases", ".yarn/releases"]
@@ -15,11 +15,11 @@ COPY components components
 COPY utility utility
 COPY api api
 
-FROM base as prod-build
+FROM base AS prod-build
 
 RUN yarn build
 
-FROM node:20-alpine as production
+FROM node:20-alpine AS production
 ENV NODE_ENV=production
 
 WORKDIR /app
@@ -33,7 +33,7 @@ COPY --from=prod-build /app/.next/standalone ./
 EXPOSE 3000
 CMD ["node", "server.js"]
 
-FROM base as development
+FROM base AS development
 ENV NODE_ENV=development
 
 EXPOSE 3000
