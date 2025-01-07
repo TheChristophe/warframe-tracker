@@ -80,6 +80,7 @@ export const fetchItems = async (): Promise<SimplifiedItem[]> => {
     const hours = 24;
     const res = await fetch('https://api.warframestat.us/items/', {
       redirect: 'follow',
+      cache: 'no-store',
     });
     if (!res.ok) {
       throw new Error('API is down');

@@ -220,4 +220,6 @@ export async function getStaticProps() {
   };
 }
 
+export const revalidate = 60 * 60;
+
 export default HomeWrapped;
