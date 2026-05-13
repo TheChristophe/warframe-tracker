@@ -1,10 +1,10 @@
 FROM node:24-alpine AS base
 
 WORKDIR /app
-COPY [".yarn/releases", ".yarn/releases"]
-COPY ["package.json", "yarn.lock*", "next.config.js", "next-env.d.ts", "tsconfig.json", ".eslintrc.json", ".prettierrc", "postcss.config.js", "tailwind.config.js", ".yarnrc.yml", "./"]
+COPY ["package.json", "pnpm-lock.yaml", "next.config.js", "next-env.d.ts", "tsconfig.json", ".eslintrc.json", ".prettierrc", "postcss.config.js", "tailwind.config.js", ".yarnrc.yml", "./"]
 ENV NEXT_TELEMETRY_DISABLED=1
-RUN yarn install
+RUN npm install -g pnpm@^10
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 COPY [".env", "./"]
 COPY public public
 COPY styles styles
@@ -17,14 +17,14 @@ COPY api api
 
 FROM base AS prod-build
 
-RUN yarn build
+RUN pnpm run build
 
 FROM node:24-alpine AS production
 ENV NODE_ENV=production
 
 WORKDIR /app
 COPY --from=prod-build /app/package.json .
-COPY --from=prod-build /app/yarn.lock .
+COPY --from=prod-build /app/pnpm-lock.yaml .
 COPY --from=prod-build /app/next.config.js .
 COPY --from=prod-build /app/public ./public
 COPY --from=prod-build /app/.next/static ./.next/static
