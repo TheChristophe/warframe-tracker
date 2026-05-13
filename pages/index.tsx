@@ -235,9 +235,8 @@ export async function getStaticProps() {
 
   return {
     props: { items: items, itemsByName: itemsByName },
+    revalidate: 60 * 60
   };
 }
-
-export const revalidate = 60 * 60;
 
 export default HomeWrapped;
