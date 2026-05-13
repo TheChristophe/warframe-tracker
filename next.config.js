@@ -7,7 +7,7 @@ const nextConfig = {
     minimumCacheTTL: 2419200,
   },
   // for my private website, remove if desired
-  //basePath: '/warframe-tracker',
+  basePath: process.env['BASEURL'] ?? undefined,
   // improves container size by a lot, read up here https://nextjs.org/docs/pages/api-reference/next-config-js/output
   output: 'standalone',
 };
