@@ -2,7 +2,9 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['cdn.warframestat.us'],
+    remotePatterns: [
+      new URL("https://cdn.warframestat.us/img/*")
+    ],
     formats: ['image/avif', 'image/webp'],
     minimumCacheTTL: 2419200,
   },

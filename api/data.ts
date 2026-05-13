@@ -77,7 +77,6 @@ export const fetchItems = async (): Promise<SimplifiedItem[]> => {
   if (value) {
     return value;
   } else {
-    const hours = 24;
     const res = await fetch('https://api.warframestat.us/items/', {
       redirect: 'follow',
       cache: 'no-store',
@@ -86,7 +85,7 @@ export const fetchItems = async (): Promise<SimplifiedItem[]> => {
       throw new Error('API is down');
     }
     const data = mergeDuplicateComponents(filterUnusedData((await res.json()) as Item[]));
-    cacheData.put(ITEM_CACHE, data, hours * 1000 * 60 * 60);
+    cacheData.put(ITEM_CACHE, data, 1000 * 60 * 30);
     return data;
   }
 };

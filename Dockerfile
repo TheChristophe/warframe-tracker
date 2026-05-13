@@ -1,4 +1,4 @@
-FROM node:22-alpine AS base
+FROM node:24-alpine AS base
 
 WORKDIR /app
 COPY [".yarn/releases", ".yarn/releases"]
@@ -19,7 +19,7 @@ FROM base AS prod-build
 
 RUN yarn build
 
-FROM node:20-alpine AS production
+FROM node:24-alpine AS production
 ENV NODE_ENV=production
 
 WORKDIR /app
@@ -37,4 +37,4 @@ FROM base AS development
 ENV NODE_ENV=development
 
 EXPOSE 3000
-CMD [ "yarn", "dev" ]
+CMD [ "pnpm", "run", "dev" ]
