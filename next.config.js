@@ -2,14 +2,12 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    remotePatterns: [
-      new URL("https://cdn.warframestat.us/img/*")
-    ],
+    remotePatterns: [new URL('https://cdn.warframestat.us/img/*')],
     formats: ['image/avif', 'image/webp'],
     minimumCacheTTL: 2419200,
   },
   // for my private website, remove if desired
-  basePath: process.env['BASEURL'] ?? undefined,
+  //basePath: '/warframe-tracker',
   // improves container size by a lot, read up here https://nextjs.org/docs/pages/api-reference/next-config-js/output
   output: 'standalone',
 };
