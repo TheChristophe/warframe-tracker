@@ -1,4 +1,4 @@
-import { Item } from 'warframe-items';
+import { Item } from '@wfcd/items';
 import {
   ALL_ALLOWED_CATEGORIES,
   AllowedCategories,

@@ -1,4 +1,4 @@
-import { Component, Category, type Melee, type Gun, type Warframe } from 'warframe-items';
+import { Component, Category, type Melee, type Gun, type Warframe } from '@wfcd/items';
 
 export type SimplifiedComponent = Pick<
   Component,
